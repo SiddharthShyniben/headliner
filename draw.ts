@@ -66,4 +66,42 @@ export function chart(data: any) {
 	console.log('    \u001b[45m  \u001b[0m Uncommon:', uncommonStr);
 	console.log('    \u001b[43m  \u001b[0m Emotional:', emotionalStr);
 	console.log('    \u001b[41m  \u001b[0m Power:', powerStr);
+	console.log()
+
+	console.log('  Type:', data.type); 
+	console.log();
+
+	console.log('  Tips:');
+
+	let overallScore = 0;
+
+	if (commonPercent > 30) {
+		console.log('    - Decrease your common words')
+	} else if (commonPercent < 20) {
+		console.log('    - Increase your common words')
+	} else overallScore += 20;
+
+	if (uncommonPercent > 20) {
+		console.log('    - Decrease your uncommon words')
+	} else if (uncommonPercent < 20) {
+		console.log('    - Increase your uncommon words')
+	} else overallScore += 20;
+
+	if (emotionalPercent > 15) {
+		console.log('    - Decrease your emotional words')
+	} else if (emotionalPercent < 10) {
+		console.log('    - Increase your emotional words')
+	} else overallScore += 20;
+
+	if (data.powerful < 2) {
+		console.log('    - Increase your power words')
+	} else overallScore += 20;
+
+	if (data.type === 'Generic') {
+		console.log('    - Rephrase your headline as a question, list, or how-to');
+	} else overallScore += 20;
+
+	console.log();
+	console.log('\u001b[1;34m Overall score:', overallScore, '\u001b[0m')
+
 }

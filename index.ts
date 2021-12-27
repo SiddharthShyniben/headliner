@@ -1,4 +1,5 @@
 import wordBank from './words.ts';
+import headlineType from './type.ts';
 import {chart} from './draw.ts';
 
 const headline = Deno.args[0] ?? await prompt('What is the headline?') ?? '';
@@ -12,6 +13,7 @@ let counts = {
 
 	positive: 0,
 	negative: 0,
+	type: 'Generic'
 };
 
 const wordStrip = (str: string) => str.replace(/[^a-zA-Z ]/g, '').toLowerCase();
@@ -51,5 +53,7 @@ words.forEach((word: string) => {
 		setSentiment(search);
 	}
 });
+
+counts.type = headlineType(headline);
 
 chart(counts);
