@@ -2,11 +2,13 @@ export function chart(data: any) {
 	const width = Deno.consoleSize(Deno.stdout.rid).columns;
 	const actualWidth = width - 4;
 
+	const round = (n = 0) => isNaN(n) ? 0 : Math.round(n);
+
 	// positive/negative
 	const totalSentiment = data.positive + data.negative;
 
-	const positivePercent = Math.round((data.positive / totalSentiment) * 100);
-	const negativePercent = Math.round((data.negative / totalSentiment) * 100);
+	const positivePercent = round((data.positive / totalSentiment) * 100);
+	const negativePercent = round((data.negative / totalSentiment) * 100);
 
 	const positiveStr = positivePercent.toString() + '%';
 	const negativeStr = negativePercent.toString() + '%';
@@ -32,10 +34,10 @@ export function chart(data: any) {
 	// types
 	const totalPercent = data.common + data.uncommon + data.emotional + data.powerful;
 
-	const commonPercent = Math.round((data.common / totalPercent) * 100);
-	const uncommonPercent = Math.round((data.uncommon / totalPercent) * 100);
-	const emotionalPercent = Math.round((data.emotional / totalPercent) * 100);
-	const powerPercent = Math.round((data.powerful / totalPercent) * 100);
+	const commonPercent = round((data.common / totalPercent) * 100);
+	const uncommonPercent = round((data.uncommon / totalPercent) * 100);
+	const emotionalPercent = round((data.emotional / totalPercent) * 100);
+	const powerPercent = round((data.powerful / totalPercent) * 100);
 
 	const commonStr = commonPercent.toString() + '%';
 	const uncommonStr = uncommonPercent.toString() + '%';
