@@ -1,9 +1,9 @@
 export default (headline: string) => {
-	if (headline.toLowerCase().startsWith('how to')) {
+	if (headline.toLowerCase().includes('how to')) {
 		return 'How-to';
 	}
 
-	if (headline.toLowerCase().endsWith('?')) {
+	if (headline.toLowerCase().includes('?')) {
 		return 'Question';
 	}
 

@@ -1,8 +1,9 @@
 import wordBank from './words.ts';
 import headlineType from './type.ts';
 import {chart} from './draw.ts';
+import readability from './readability.ts';
 
-const headline = Deno.args[0] ?? await prompt('What is the headline?') ?? '';
+const headline = Deno.args[0] ?? await prompt('\u001b[1;34mWhat is the headline?\u001b[0m') ?? '';
 const words = headline.split(' ');
 
 let counts = {
@@ -13,7 +14,10 @@ let counts = {
 
 	positive: 0,
 	negative: 0,
-	type: 'Generic'
+	type: 'Generic',
+	readability: {},
+	wordCount: 0,
+	charCount: 0,
 };
 
 const wordStrip = (str: string) => str.replace(/[^a-zA-Z ]/g, '').toLowerCase();
@@ -27,7 +31,7 @@ type Bank = Word[];
 
 words.forEach((word: string) => {
 	const stripped = wordStrip(word);
-	let search;
+	let search: Word | undefined;
 
 	const setSentiment = (search: Word): void => {
 		if (search.sentiment === 'positive') {
@@ -55,5 +59,9 @@ words.forEach((word: string) => {
 });
 
 counts.type = headlineType(headline);
+counts.readability = readability(headline);
+
+counts.wordCount = words.length;
+counts.charCount = headline.length;
 
 chart(counts);

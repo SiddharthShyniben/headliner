@@ -1,3 +1,5 @@
+import gradient from './gradient.ts';
+
 export function chart(data: any) {
 	const width = Deno.consoleSize(Deno.stdout.rid).columns;
 	const actualWidth = width - 4;
@@ -29,6 +31,8 @@ export function chart(data: any) {
 	console.log()
 	console.log('    \u001b[42m  \u001b[0m Positive:', positiveStr);
 	console.log('    \u001b[41m  \u001b[0m Negative:', negativeStr);
+	console.log()
+	console.log('    \u001b[41m beta \u001b[0m')
 	console.log()
 
 	// types
@@ -64,10 +68,37 @@ export function chart(data: any) {
 	);
 
 	console.log()
-	console.log('    \u001b[44m  \u001b[0m Common:', commonStr);
-	console.log('    \u001b[45m  \u001b[0m Uncommon:', uncommonStr);
-	console.log('    \u001b[43m  \u001b[0m Emotional:', emotionalStr);
-	console.log('    \u001b[41m  \u001b[0m Power:', powerStr);
+	console.log(`    \u001b[44m  \u001b[0m Common:`, commonStr);
+	console.log(`    \u001b[45m  \u001b[0m Uncommon:`, uncommonStr);
+	console.log(`    \u001b[43m  \u001b[0m Emotional:`, emotionalStr);
+	console.log(`    \u001b[41m  \u001b[0m Power:`, powerStr);
+	console.log()
+
+	// word count
+	const wordCount = Math.max(Math.min(data.wordCount, 24), 0);
+	const rangeGradient = gradient(['red', 'yellow', 'green', 'yellow','red']);
+
+	const wordCountPercent = round((wordCount / 24) * 100);
+	const wordCountStartPad = (actualWidth / 100) * wordCountPercent;
+
+	console.log('  Word Count:');
+	console.log()
+	console.log(' ', 0 + ' '.repeat(wordCountStartPad - 3) + wordCount + ' '.repeat(actualWidth - (wordCountStartPad + 1)) + 24);
+	console.log(' ', rangeGradient('.'.repeat(actualWidth)));
+	console.log(' '.repeat(wordCountStartPad) + '▲'.repeat(wordCount.toString().length));
+	console.log()
+
+	// char count
+	const charCount = Math.max(Math.min(data.charCount, 150), 0);
+
+	const charCountPercent = round((charCount / 150) * 100);
+	const charCountStartPad = (actualWidth / 100) * charCountPercent;
+
+	console.log('  Character Count:');
+	console.log()
+	console.log(' ', 0 + ' '.repeat(charCountStartPad - 3) + charCount + ' '.repeat(actualWidth - (charCountStartPad + 2)) + 150);
+	console.log(' ', rangeGradient('.'.repeat(actualWidth)));
+	console.log(' '.repeat(charCountStartPad) + '▲'.repeat(charCount.toString().length));
 	console.log()
 
 	console.log('  Type:', data.type); 
@@ -81,29 +112,48 @@ export function chart(data: any) {
 		console.log('    - Decrease your common words')
 	} else if (commonPercent < 20) {
 		console.log('    - Increase your common words')
-	} else overallScore += 20;
+	} else overallScore += 15;
 
 	if (uncommonPercent > 20) {
 		console.log('    - Decrease your uncommon words')
 	} else if (uncommonPercent < 20) {
 		console.log('    - Increase your uncommon words')
-	} else overallScore += 20;
+	} else overallScore += 15;
 
 	if (emotionalPercent > 15) {
 		console.log('    - Decrease your emotional words')
 	} else if (emotionalPercent < 10) {
 		console.log('    - Increase your emotional words')
-	} else overallScore += 20;
+	} else overallScore += 15;
 
 	if (data.powerful < 2) {
 		console.log('    - Increase your power words')
-	} else overallScore += 20;
+	} else overallScore += 15;
 
 	if (data.type === 'Generic') {
 		console.log('    - Rephrase your headline as a question, list, or how-to');
-	} else overallScore += 20;
+	} else overallScore += 15;
+
+	if (data.wordCount < 10) {
+		if (data.wordCount > 6) overallScore += 10;
+		else overallScore += 5;
+		console.log('    - Increase your word count; good headlines are around 12 words');
+	} else if (data.wordCount > 14) {
+		if (data.wordCount < 18) overallScore += 10;
+		else overallScore += 5;
+		console.log('    - Decrease your word count; good headlines are around 12 words');
+	} else overallScore += 15;
+
+	if (data.charCount < 50) {
+		if (data.charCount > 30) overallScore += 10;
+		else overallScore += 5;
+		console.log('    - Increase your character count; good headlines are around 70 characters');
+	} else if (data.charCount > 90) {
+		if (data.charCount < 110) overallScore += 10;
+		else overallScore += 5;
+		console.log('    - Decrease your character count; good headlines are around 70 characters');
+	} else overallScore += 10;
 
 	console.log();
 	console.log('\u001b[1;34m Overall score:', overallScore, '\u001b[0m')
-
 }
